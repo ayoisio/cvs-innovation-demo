@@ -30,6 +30,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/sign-up/page.js"
+    ],
+    "/documents-review/[documentsReviewId]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/documents-review/[documentsReviewId]/page.js"
     ]
   }
 }

@@ -5,6 +5,11 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import loadingAnimation from "public/lotties/loadingBlueDocuments.json";
 
+interface Citation {
+  title: string;
+  uri: string;
+}
+
 interface Alternative {
   explanation: string;
   improved_claim: string;
@@ -18,6 +23,7 @@ interface Claim {
   context: string;
   topic: string;
   alternatives: Alternative[];
+  citations: Citation[];
 }
 
 interface MedicalClaimsTabProps {
@@ -64,12 +70,34 @@ const MedicalClaimsTab: React.FC<MedicalClaimsTabProps> = ({
       remarkPlugins={[remarkGfm]}
       components={{
         a: ({ node, ...props }) => (
-          <a className="text-blue-500 hover:underline" {...props} />
+          <a
+            className="text-blue-500 hover:underline"
+            {...props}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
         ),
       }}
     >
       {content}
     </ReactMarkdown>
+  );
+
+  const renderCitations = (citations: Citation[]) => (
+    <ol className="list-decimal list-inside">
+      {citations.map((citation, index) => (
+        <li key={index} className="mb-2">
+          <a
+            href={citation.uri}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            {citation.title}
+          </a>
+        </li>
+      ))}
+    </ol>
   );
 
   if (claimsStatus === "idle") {
@@ -166,7 +194,7 @@ const MedicalClaimsTab: React.FC<MedicalClaimsTabProps> = ({
 
                 <div className="mb-4">
                   <h4 className="font-semibold mb-2">Citations:</h4>
-                  {renderMarkdown("## Citations")}
+                  {renderCitations(claim.citations)}
                 </div>
               </>
             )}
