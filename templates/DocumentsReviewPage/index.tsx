@@ -53,6 +53,11 @@ interface Message {
   uploadedFiles?: UploadedFile[];
 }
 
+interface Citation {
+  title: string;
+  uri: string;
+}
+
 interface Alternative {
   explanation: string;
   improved_claim: string;
@@ -66,6 +71,7 @@ interface Claim {
   context: string;
   topic: string;
   alternatives: Alternative[];
+  citations: Citation[];
 }
 
 interface ImpreciseLanguageInstance {
