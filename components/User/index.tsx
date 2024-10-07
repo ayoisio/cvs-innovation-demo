@@ -121,7 +121,7 @@ const User: React.FC<UserProps> = ({ className }) => {
                 <NavLink
                   title="News"
                   icon="news"
-                  url="https://www.uhc.com/news-articles/newsroom"
+                  url="https://www.cvshealth.com/news/press-releases.html"
                   openInNewTab={true}
                 />
               </div>
