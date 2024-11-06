@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 interface AuthState {
   user: User | null;
@@ -11,21 +11,21 @@ interface AuthState {
 
 /**
  * Custom hook for handling Firebase authentication state and navigation
- * 
+ *
  * This hook provides:
  * - Real-time authentication state monitoring
  * - Automatic navigation based on auth state
  * - Loading state for auth-dependent UI
- * 
+ *
  * @returns {AuthState} Authentication state object containing user and loading status
  */
 export const useAuth = (): AuthState => {
   // State for storing the current user
   const [user, setUser] = useState<User | null>(null);
-  
+
   // State for tracking the loading status of auth state
   const [loading, setLoading] = useState<boolean>(true);
-  
+
   // Next.js router for programmatic navigation
   const router = useRouter();
 
@@ -42,9 +42,9 @@ export const useAuth = (): AuthState => {
         // User is signed out
         setUser(null);
         // Redirect to sign-in page when user is not authenticated
-        router.push('/sign-in');
+        router.push("/sign-in");
       }
-      
+
       // Authentication state has been determined, so we're no longer loading
       setLoading(false);
     });
