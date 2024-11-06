@@ -1,9 +1,13 @@
 "use client";
 
-// Import necessary dependencies
 import { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+
+interface AuthState {
+  user: User | null;
+  loading: boolean;
+}
 
 /**
  * Custom hook for handling Firebase authentication state and navigation
@@ -13,16 +17,14 @@ import { useRouter } from 'next/navigation';
  * - Automatic navigation based on auth state
  * - Loading state for auth-dependent UI
  * 
- * @returns {Object} Authentication state object
- * @returns {Object} user - The current Firebase user object or null if not authenticated
- * @returns {boolean} loading - Indicates whether the auth state is still being determined
+ * @returns {AuthState} Authentication state object containing user and loading status
  */
-export const useAuth = () => {
+export const useAuth = (): AuthState => {
   // State for storing the current user
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   
   // State for tracking the loading status of auth state
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   
   // Next.js router for programmatic navigation
   const router = useRouter();
