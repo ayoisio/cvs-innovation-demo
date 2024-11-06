@@ -285,14 +285,17 @@ export const getChatTitle = async (
   firstMessage: string
 ): Promise<string> => {
   const authToken = await getAuthToken();
-  const response = await fetch(`${process.env.CLOUD_RUN_URL}/chat/title`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({ chatId, text: firstMessage }),
-  });
+  const response = await fetch(
+    "https://public-chat-179280619779.us-central1.run.app/chat/title",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ chatId, text: firstMessage }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to get chat title");
