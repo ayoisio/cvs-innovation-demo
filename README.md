@@ -27,8 +27,8 @@
     * **File Display:** Displays uploaded files associated with the chat. Supports PDF and image rendering.
     * **Download URL Fetching:** Fetches download URLs for uploaded files from Firebase Storage.
 
-* **Medical Claims Tab (`MedicalClaimsTab.tsx`):**  (Code not provided, but referenced)
-    * Presumably displays the identified medical claims and related information from the backend.
+* **Medical Claims Tab (`MedicalClaimsTab.tsx`):**
+    * **Medical claims display:** Displays the identified medical claims, citations, and alternative improved claims.
 
 * **Imprecise Language Tab (`ImpreciseLanguageTab.tsx`):**
     * **Imprecise Language Display:** Displays identified imprecise language instances, along with context, improvement suggestions, severity, and confidence score.
