@@ -30,11 +30,9 @@ const Answer = ({ content, image, children, style }: AnswerProps) => {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              // You can customize how different elements are rendered
               a: ({ node, ...props }) => (
                 <a className="text-blue-500 hover:underline" {...props} />
               ),
-              // Add more custom renderers as needed
             }}
           >
             {content}

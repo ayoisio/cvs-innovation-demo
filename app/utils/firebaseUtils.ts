@@ -1,3 +1,4 @@
+// Firebase configuration imports
 import { app } from "../firebaseConfig";
 import {
   getFirestore,
@@ -18,24 +19,28 @@ import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { MessageType } from "@/components/Message";
 import { v4 as uuidv4 } from "uuid";
 
+// Initialize Firebase services
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const auth = getAuth(app);
 
+// Type definition for files being uploaded
 type UploadedFile = {
   fileName: string;
   fileMimeType: string;
-  preview?: string;
-  file?: File;
+  preview?: string; // Optional preview URL for the file
+  file?: File; // Optional File object
 };
 
+// Type definition for files after they've been uploaded to Firebase Storage
 type FileReference = {
   fileName: string;
   fileMimeType: string;
-  downloadUrl: string;
-  storagePath: string;
+  downloadUrl: string; // URL to download the file
+  storagePath: string; // Path where file is stored in Firebase Storage
 };
 
+// Type definition for chat update data structure
 export type ChatUpdateData = {
   title: string;
   messages: MessageType[];
@@ -44,6 +49,7 @@ export type ChatUpdateData = {
   mode?: string;
 };
 
+// Type definition for chat data structure
 export type ChatData = {
   title: string;
   messages: MessageType[];
@@ -52,6 +58,10 @@ export type ChatData = {
   mode?: string;
 };
 
+/**
+ * Gets the current user's ID from Firebase Auth
+ * @returns Promise resolving to the user ID string
+ */
 export const getCurrentUserId = (): Promise<string> => {
   return new Promise((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
@@ -65,6 +75,10 @@ export const getCurrentUserId = (): Promise<string> => {
   });
 };
 
+/**
+ * Gets the current user's authentication token
+ * @returns Promise resolving to the auth token string
+ */
 export const getAuthToken = async (): Promise<string> => {
   const user = auth.currentUser;
   if (user) {
@@ -73,6 +87,11 @@ export const getAuthToken = async (): Promise<string> => {
   throw new Error("No user is signed in");
 };
 
+/**
+ * Retrieves user data from Firestore
+ * @param userId - The ID of the user to fetch data for
+ * @returns Promise resolving to the user data or null if not found
+ */
 export const getUserData = async (userId: string) => {
   const userDocRef = doc(db, "users", userId);
   const userDoc = await getDoc(userDocRef);
@@ -82,6 +101,13 @@ export const getUserData = async (userId: string) => {
   return null;
 };
 
+/**
+ * Creates a new chat document in Firestore
+ * @param userId - The ID of the user creating the chat
+ * @param message - Optional initial message for the chat
+ * @param customChatId - Optional custom ID for the chat
+ * @returns Promise resolving to the chat ID
+ */
 export const createNewChat = async (
   userId: string,
   message?: string,
@@ -100,6 +126,14 @@ export const createNewChat = async (
   return chatId;
 };
 
+/**
+ * Uploads files to Firebase Storage
+ * @param files - Array of files to upload
+ * @param userId - ID of the user uploading the files
+ * @param chatId - ID of the chat the files belong to
+ * @param messageId - ID of the message the files are attached to
+ * @returns Promise resolving to array of file references
+ */
 export const uploadFilesToStorage = async (
   files: UploadedFile[],
   userId: string,
@@ -130,6 +164,14 @@ export const uploadFilesToStorage = async (
   return Promise.all(uploadPromises);
 };
 
+/**
+ * Adds a new message to a chat, including handling file uploads
+ * @param userId - ID of the user adding the message
+ * @param chatId - ID of the chat to add the message to
+ * @param message - The message content and metadata
+ * @param uploadedFiles - Array of files to upload with the message
+ * @returns Promise resolving to the message ID
+ */
 export const addMessageToChat = async (
   userId: string,
   chatId: string,
@@ -167,9 +209,15 @@ export const addMessageToChat = async (
     status: message.type === "question" ? "processing" : "completed",
   });
 
-  return messageId; // Return the messageId for reference
+  return messageId;
 };
 
+/**
+ * Retrieves all data for a specific chat
+ * @param userId - ID of the user who owns the chat
+ * @param chatId - ID of the chat to retrieve
+ * @returns Promise resolving to the chat data or null if not found
+ */
 export const getChatData = async (
   userId: string,
   chatId: string
@@ -211,6 +259,12 @@ export const getChatData = async (
   return null;
 };
 
+/**
+ * Updates the title of a chat
+ * @param userId - ID of the user who owns the chat
+ * @param chatId - ID of the chat to update
+ * @param title - New title for the chat
+ */
 export const updateChatTitle = async (
   userId: string,
   chatId: string,
@@ -220,22 +274,25 @@ export const updateChatTitle = async (
   await updateDoc(chatRef, { title });
 };
 
+/**
+ * Generates a title for a chat based on its first message
+ * @param chatId - ID of the chat
+ * @param firstMessage - First message in the chat
+ * @returns Promise resolving to the generated title
+ */
 export const getChatTitle = async (
   chatId: string,
   firstMessage: string
 ): Promise<string> => {
   const authToken = await getAuthToken();
-  const response = await fetch(
-    "https://public-chat-179280619779.us-central1.run.app/chat/title",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ chatId, text: firstMessage }),
-    }
-  );
+  const response = await fetch(`${process.env.CLOUD_RUN_URL}/chat/title`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({ chatId, text: firstMessage }),
+  });
 
   if (!response.ok) {
     throw new Error("Failed to get chat title");
@@ -247,6 +304,13 @@ export const getChatTitle = async (
   return data.title;
 };
 
+/**
+ * Sets up real-time listeners for changes to a chat and its messages
+ * @param userId - ID of the user who owns the chat
+ * @param chatId - ID of the chat to listen to
+ * @param callback - Function to call when changes occur
+ * @returns Unsubscribe function to stop listening
+ */
 export const listenToChatChanges = (
   userId: string,
   chatId: string,
