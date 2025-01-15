@@ -368,6 +368,10 @@ const DocumentsReviewPage: React.FC<DocumentsReviewPageProps> = ({
         >
           Approve
         </button>
+        <div className="text-xs text-black mt-6 text-center">
+          PRIVILEGED AND CONFIDENTIAL: PATIENT SAFETY WORK PRODUCT UNDER FEDERAL
+          LAW
+        </div>
       </div>
     </Layout>
   );
