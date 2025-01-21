@@ -45,7 +45,7 @@
 
 **Technical Details:**
 
-* **Client-side Rendering:** The `use client` directive indicates that these components are rendered on the client-side.
+* **Client-side Rendering:** The `use client` directive indicates that these components are rendered on the client-side
 * **Hooks:** Uses React hooks like `useState`, `useEffect`, `useCallback`, `useMemo`, `useRouter`, `usePathname`, and `useColorMode` for managing state, side effects, memoization, routing, and color mode.
 * **Markdown Rendering:** Uses `react-markdown` and `remark-gfm` for rendering Markdown content in messages and other components.
 * **Lottie Animations:** Uses `lottie-react` for displaying loading and checkmark animations.
