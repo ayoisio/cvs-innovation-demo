@@ -24,6 +24,8 @@ interface Claim {
   topic: string;
   alternatives: Alternative[];
   citations: Citation[];
+  citations_from_reference_repository: any;
+  cited_by_trusted_resources: any;
 }
 
 interface MedicalClaimsTabProps {
@@ -99,6 +101,19 @@ const MedicalClaimsTab: React.FC<MedicalClaimsTabProps> = ({
       ))}
     </ol>
   );
+
+  const hasTrustedCitations = (citationsString: string): string => {
+    const hasCitationsBool = citationsString.toLowerCase() === "true";
+    return hasCitationsBool ? "Yes" : "No";
+  };
+
+  const displayTriggerWordMessage = (triggerWordsPresent: string): string => {
+    const hasTriggerWords = triggerWordsPresent.toLowerCase() === "true";
+    if (!hasTriggerWords) {
+      return "No claims found using medical conditions or trigger words matching.";
+    }
+    return ""; // Or handle the 'false' case as needed, e.g., return a different message.
+  };
 
   if (claimsStatus === "idle") {
     console.log("Rendering: Medical claims analysis has not started yet.");
@@ -196,6 +211,21 @@ const MedicalClaimsTab: React.FC<MedicalClaimsTabProps> = ({
                   <h4 className="font-semibold mb-2">Citations:</h4>
                   {renderCitations(claim.citations)}
                 </div>
+
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">
+                    Citations from Clinical Reference Repository:
+                  </h4>
+                  {renderCitations(claim.citations_from_reference_repository)}
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">
+                    Cited by Trusted Resources from Clinical Reference
+                    Repository:
+                  </h4>
+                  {hasTrustedCitations(claim.cited_by_trusted_resources)}
+                </div>
               </>
             )}
 
@@ -223,6 +253,18 @@ const MedicalClaimsTab: React.FC<MedicalClaimsTabProps> = ({
             style={{ width: 50, height: 50 }}
           />
           <span className="ml-2">Analyzing more claims...</span>
+        </div>
+      )}
+
+      {
+        <div className="flex justify-center items-center h-16">
+          <span>displayTriggerWordMessage(claim.triggers_present)</span>
+        </div>
+      }
+
+      {claimsStatus === "completed" && (
+        <div className="flex justify-center items-center h-16">
+          <span>Analysis is complete.</span>
         </div>
       )}
     </div>
