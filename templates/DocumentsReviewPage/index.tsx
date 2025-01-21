@@ -72,6 +72,8 @@ interface Claim {
   topic: string;
   alternatives: Alternative[];
   citations: Citation[];
+  citations_from_reference_repository: any;
+  cited_by_trusted_resources: any;
 }
 
 interface ImpreciseLanguageInstance {
