@@ -21,7 +21,7 @@
 * **Chat Tab (`ChatTab.tsx`):**
     * **Chat Initialization:** Initializes the chat by checking if a chat exists for the given `documentsReviewId`. If not, it creates a new chat.
     * **Loading State:** Displays a loading animation while the chat is being initialized.
-    * **Chat Display:** Renders the `Chat` component once the chat is initialized.
+    * **Chat Display:** Renders the `Chat` component once the chat is initialized
 
 * **Documents Tab (`DocumentsTab.tsx`):**
     * **File Display:** Displays uploaded files associated with the chat. Supports PDF and image rendering.
